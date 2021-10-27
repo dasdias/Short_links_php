@@ -1,3 +1,20 @@
+<?php include_once  'includes/functions.php'; ?>
+<?php 
+	if (isset($_GET["url"]) && !empty($_GET["url"])) {
+		$url = strtolower( trim($_GET["url"]) );
+		
+		$link = db_query("SELECT * FROM `links` WHERE `short_link` = '$url';")->fetch();
+		
+		if (empty($link)) {
+			echo "Такой ссылки нет";
+			die;
+		}
+		
+		db_exec("UPDATE `links` SET `views` = `views` + 1 WHERE `short_link` = '$url';");
+		header('Location: ' . $link['long_link']);
+		die;
+	};
+?>
 <?php include 'includes/header.php'; ?>
 <main class="container">
 	<div class="row mt-5">
@@ -7,17 +24,17 @@
 	</div>
 	<div class="row mt-5">
 		<div class="col">
-			<h2 class="text-center">Пользователей в системе: 100</h2>
+			<h2 class="text-center">Пользователей в системе: <?php echo $users_count ?></h2>
 		</div>
 	</div>
 	<div class="row mt-5">
 		<div class="col">
-			<h2 class="text-center">Ссылок в системе: 200</h2>
+			<h2 class="text-center">Ссылок в системе: <?php echo $link_count ?></h2>
 		</div>
 	</div>
 	<div class="row mt-5">
 		<div class="col">
-			<h2 class="text-center">Всего переходов по ссылкам: 300</h2>
+			<h2 class="text-center">Всего переходов по ссылкам: <?php echo $views_count ?></h2>
 		</div>
 	</div>
 </main>
